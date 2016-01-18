@@ -1,8 +1,8 @@
-/* Riot v2.3.13, @license MIT, (c) 2015 Muut Inc. + contributors */
+/* Riot WIP, @license MIT, (c) 2015 Muut Inc. + contributors */
 
 ;(function(window, undefined) {
   'use strict';
-var riot = { version: 'v2.3.13', settings: {} },
+var riot = { version: 'WIP', settings: {} },
   // be aware, internal usage
   // ATTENTION: prefix the global dynamic variables with `__`
 
@@ -931,7 +931,7 @@ var mkdom = (function (checkIE) {
     el.stub = true
 
     // replace all the yield tags with the tag inner html
-    if (html) templ = replaceYield(templ, html)
+    templ = replaceYield(templ, html || '')
 
     /* istanbul ignore next */
     if (checkIE && tagName && (match = tagName.match(SPECIAL_TAGS_REGEX)))
@@ -980,7 +980,7 @@ var mkdom = (function (checkIE) {
       })
 
     // yield without any "from", replace yield in templ with the innerHTML
-    return n ? templ : templ.replace(/<yield\s*(?:\/>|>\s*<\/yield\s*>)/gi, html || '')
+    return n ? templ : templ.replace(/<yield\s*(?:\/>|>\s*<\/yield\s*>)/gi, html)
   }
 
   return _mkdom
@@ -1194,7 +1194,7 @@ function _each(dom, parent, expr) {
         oldItems.splice(i, 0, oldItems.splice(pos, 1)[0])
         // if the loop tags are not custom
         // we need to move all their custom tags into the right position
-        if (!child) moveNestedTags(tag, i)
+        if (!child && tag.tags) moveNestedTags(tag, i)
       }
 
       // cache the original item to use it in the events bound to this node
@@ -1550,7 +1550,7 @@ function Tag(impl, conf, innerHTML) {
 
     if (this._virts) {
       each(this._virts, function(v) {
-        v.parentNode.removeChild(v)
+        if (v.parentNode) v.parentNode.removeChild(v)
       })
     }
 
